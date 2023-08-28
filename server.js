@@ -1,21 +1,26 @@
-const cors = require("cors");
-const express = require("express");
+const express = require('express');
+const multer = require('multer');
+const csvController = require('./controllers/csvController');
+
 const app = express();
+const port = process.env.PORT || 3000;
 
-global.__basedir = __dirname;
+app.use(express.static('public'));
 
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
+// Set up file upload using Multer
+const storage = multer.diskStorage({
+  destination: './uploads/',
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
-app.use(cors(corsOptions));
+const upload = multer({ storage });
 
-const initRoutes = require("./src/routes");
+app.post('/upload', upload.single('csvFile'), csvController.uploadCSV);
+app.get('/files', csvController.listCSVFiles);
+app.get('/data/:filename', csvController.getCSVData);
 
-app.use(express.urlencoded({ extended: true }));
-initRoutes(app);
-
-let port = 8080;
 app.listen(port, () => {
-  console.log(`Running at localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
