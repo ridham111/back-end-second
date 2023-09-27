@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Event listener for file upload
     uploadButton.addEventListener('click', () => {
-      fileInput.appendChild(fileInput.files[0])
+ //     fileInput.appendChild(fileInput.files[0])
       const file = fileInput.files[0];
       if (file) {
         const formData = new FormData();
